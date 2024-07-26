@@ -53,6 +53,8 @@ model.summary()
 
 model.save("./_save/keras28/keras28_1_save_model.h5")
 
+
+
 '''
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')

@@ -1,4 +1,4 @@
-#26_1에서 가져옴
+#18_1에서 가져옴
 import numpy as np
 import pandas as pd
 import sklearn as sk
@@ -44,18 +44,20 @@ print(np.min(x_test), np.max(x_test)) #-0.008298755186722073 1.1478180091225068
 #2. 모델구성
 model = Sequential()
 # model.add(Dense(100, input_dim=13)) 
-model.add(Dense(10, input_shape=(13,))) #백터형태로 받아들인다 백터가 어차피 column 이니까 #이미지일때는 input_shape=(8,8,1) 
-model.add(Dense(5))
+model.add(Dense(128, input_shape=(13,))) #백터형태로 받아들인다 백터가 어차피 column 이니까 #이미지일때는 input_shape=(8,8,1) 
+model.add(Dense(128))
+model.add(Dense(128))
+model.add(Dense(64))
+model.add(Dense(64))
+model.add(Dense(64))
+model.add(Dense(64))
+model.add(Dense(64))
+model.add(Dense(32))
+model.add(Dense(32))
+model.add(Dense(32))
+model.add(Dense(32))
 model.add(Dense(1))
 
-
-model.summary()
-
-# model.save("./_save/keras28/keras28_1_save_model.h5") # 상대경로 .은 현재폴더라는 뜻
-model.save("C:/ai5/_save/keras28/keras28_1_save_model.h5") #절대경로
-
-
-'''
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 start = time.time()
@@ -78,4 +80,3 @@ print('r2 score :', r2)
 # RobustScaler
 # 로스 :  17.011682510375977
 # r2 score : 0.8183080232863937
-'''

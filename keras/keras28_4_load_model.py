@@ -4,7 +4,7 @@ import pandas as pd
 import sklearn as sk
 print(sk.__version__)   # 0.24.2
 from sklearn.datasets import load_boston
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 import time
@@ -41,26 +41,28 @@ print(np.min(x_train), np.max(x_train)) #0.0 1.0000000000000002
 print(np.min(x_test), np.max(x_test)) #-0.008298755186722073 1.1478180091225068
 
 
-#2. 모델구성
-model = Sequential()
-# model.add(Dense(100, input_dim=13)) 
-model.add(Dense(10, input_shape=(13,))) #백터형태로 받아들인다 백터가 어차피 column 이니까 #이미지일때는 input_shape=(8,8,1) 
-model.add(Dense(5))
-model.add(Dense(1))
+# #2. 모델구성
+# model = Sequential()
+# # model.add(Dense(100, input_dim=13)) 
+# model.add(Dense(10, input_shape=(13,))) #백터형태로 받아들인다 백터가 어차피 column 이니까 #이미지일때는 input_shape=(8,8,1) 
+# model.add(Dense(5))
+# model.add(Dense(1))
 
+
+# model.summary()
+
+# model.save("./_save/keras28/keras28_1_save_model.h5")
+
+model = load_model("./_save/keras28/keras28_3_save_model.h5")
 
 model.summary()
 
-# model.save("./_save/keras28/keras28_1_save_model.h5") # 상대경로 .은 현재폴더라는 뜻
-model.save("C:/ai5/_save/keras28/keras28_1_save_model.h5") #절대경로
 
-
-'''
-#3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
-start = time.time()
-hist = model.fit(x_train, y_train, epochs=1000, batch_size=32, verbose=1, validation_split = 0.3)
-end = time.time()
+# #3. 컴파일, 훈련
+# model.compile(loss='mse', optimizer='adam')
+# start = time.time()
+# hist = model.fit(x_train, y_train, epochs=100, batch_size=32, verbose=1, validation_split = 0.3)
+# end = time.time()
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -78,4 +80,6 @@ print('r2 score :', r2)
 # RobustScaler
 # 로스 :  17.011682510375977
 # r2 score : 0.8183080232863937
-'''
+
+# 로스 :  32.65073013305664
+# r2 score : 0.651276454383233

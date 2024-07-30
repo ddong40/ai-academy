@@ -2,8 +2,8 @@
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -44,27 +44,60 @@ test_csv = scaler.transform(test_csv)
 
 #2 모델구성
 
-model = Sequential()
-model.add(Dense(128, activation = 'relu', input_dim = 200))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(1, activation = 'sigmoid'))
+# model = Sequential()
+# model.add(Dense(128, activation = 'relu', input_dim = 200))
+# model.add(Dropout(0.2))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(1, activation = 'sigmoid'))
+
+input1 = Input(shape=(200))
+dense1 = Dense(128, activation = 'relu')(input1)
+drop1 = Dropout(0.2)(dense1)
+dense2 = Dense(128, activation = 'relu')(drop1)
+drop2 = Dropout(0.2)(dense2)
+dense3 = Dense(128, activation = 'relu')(drop2)
+drop3 = Dropout(0.2)(dense3)
+dense4 = Dense(128, activation = 'relu')(drop3)
+drop4 = Dropout(0.2)(dense4)
+dense5 = Dense(64, activation = 'relu')(drop4)
+drop5 = Dropout(0.2)(dense5)
+dense6 = Dense(64, activation = 'relu')(drop5)
+drop6 = Dropout(0.2)(dense6)
+dense7 = Dense(64, activation = 'relu')(drop6)
+drop7 = Dropout(0.2)(dense7)
+dense8 = Dense(64, activation = 'relu')(drop7)
+drop8 = Dropout(0.2)(dense8)
+dense9 = Dense(32, activation = 'relu')(drop8)
+drop9 = Dropout(0.2)(dense9)
+dense10 = Dense(32, activation = 'relu')(drop9)
+drop10 = Dropout(0.2)(dense10)
+dense11 = Dense(32, activation = 'relu')(drop10)
+drop11 = Dropout(0.2)(dense11)
+dense12 = Dense(32, activation = 'relu')(drop11)
+drop12 = Dropout(0.2)(dense12)
+output1 = Dense(1, activation = 'sigmoid')(drop12)
+model = Model(inputs = input1, outputs = output1)
 
 # 3 컴파일 훈련
 model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics=['accuracy'])
@@ -81,7 +114,7 @@ import datetime
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 
-path1 = './_save/keras30_mcp/12_kaggle_santander_customer/'
+path1 = './_save/keras32/12_kaggle_santander_customer/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 filepath = "".join([path1, 'k30_', date, '_', filename])
 
@@ -131,3 +164,17 @@ sampleSubmission.to_csv(path+'samplesubmission_0724_1520.csv')
 # 세이브 값
 # 로스 :  0.24112220108509064
 # 정확도 :  0.911
+
+# drop out
+# 로스 :  0.3261842727661133
+# 정확도 :  0.9
+
+# cpu
+# 로스 :  0.2630799412727356
+# 정확도 :  0.9
+# 시간 364.51 초
+
+# gpu
+# 로스 :  0.2645145654678345
+# 정확도 :  0.9
+# 시간 5441.09 초

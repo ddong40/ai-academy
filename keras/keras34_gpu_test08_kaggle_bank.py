@@ -3,8 +3,8 @@
 # 문자를 수치화 해주기 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -57,17 +57,50 @@ test_csv = scaler.transform(test_csv)
 
 
 #2 모델구성
-model = Sequential()
-model.add(Dense(64,activation='relu', input_dim=10))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+# model = Sequential()
+# model.add(Dense(64,activation='relu', input_dim=10))
+# model.add(Dense(0.3))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(0.3))
+# model.add(Dense(1, activation='sigmoid'))
+
+input1 = Input(shape=(10))
+dense1 = Dense(64, activation='relu')(input1)
+drop1 = Dropout(0.3)(dense1)
+dense2 = Dense(64, activation='relu')(drop1)
+drop2 = Dropout(0.3)(dense2)
+dense3 = Dense(64, activation='relu')(drop2)
+drop3 = Dropout(0.3)(dense3)
+dense4 = Dense(64, activation='relu')(drop3)
+drop4 = Dropout(0.3)(dense4)
+dense5 = Dense(32, activation='relu')(drop4)
+drop5 = Dropout(0.3)(dense5)
+dense6 = Dense(32, activation='relu')(drop5)
+drop6 = Dropout(0.3)(dense6)
+dense7 = Dense(16, activation='relu')(drop6)
+drop7 = Dropout(0.3)(dense7)
+dense8 = Dense(16, activation='relu')(drop7)
+drop8 = Dropout(0.3)(dense8)
+dense9 = Dense(8, activation='relu')(drop8)
+drop9 = Dropout(0.3)(dense9)
+output1 = Dense(1, activation = 'sigmoid')(drop9)
+model = Model(inputs = input1, outputs = output1)
+
+model.summary()
 
 #3 컴파일 훈련
 from sklearn.metrics import accuracy_score
@@ -86,7 +119,7 @@ import datetime
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 
-path1 = './_save/keras30_mcp/08_kaggle_bank/'
+path1 = './_save/keras32/08_kaggle_bank/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 filepath = ''.join([path1, 'k30_', date, '_', filename])
 
@@ -181,3 +214,7 @@ print(sampleSubmission['Exited'].value_counts())
 # 세이브 값
 # 로스 :  0.32415467500686646
 # acc :  0.864
+
+# drop out
+# 로스 :  0.6931590437889099
+# acc :  0.788

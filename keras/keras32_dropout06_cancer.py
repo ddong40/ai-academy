@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.datasets import load_breast_cancer
 import pandas as pd
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
 import time
 from tensorflow.keras.callbacks import EarlyStopping
@@ -55,37 +55,61 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 
-# #2. 모델구성
-# model = Sequential()
-# model.add(Dense(64,activation='relu', input_dim=30))
-# model.add(Dense(64, activation='relu'))
-# model.add(Dense(64, activation='relu'))
-# model.add(Dense(64, activation='relu'))
-# model.add(Dense(64, activation='relu'))
-# model.add(Dense(32, activation='relu'))
-# model.add(Dense(32, activation='relu'))
-# model.add(Dense(16, activation='relu'))
-# model.add(Dense(1, activation='sigmoid'))
+#2. 모델구성
+model = Sequential()
+model.add(Dense(64,activation='relu', input_dim=30))
+model.add(Dropout(0.2))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(16, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(1, activation='sigmoid'))
 
-# #3. 컴파일, 훈련
-# model.compile(loss='mse', optimizer='adam', metrics=['acc']) #accuracy와 acc는 같다.
-# start = time.time()
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam', metrics=['acc']) #accuracy와 acc는 같다.
+start = time.time()
 
-# from tensorflow.keras.callbacks import EarlyStopping 
-# es = EarlyStopping(
-#     monitor='val_loss', 
-#     mode = 'min', 
-#     patience = 30,
-#     restore_best_weights=True 
-# )
+from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint 
+es = EarlyStopping(
+    monitor='val_loss', 
+    mode = 'min', 
+    patience = 30,
+    restore_best_weights=True 
+)
+import datetime
+date = datetime.datetime.now()
+date = date.strftime("%m%d_%H%M")
 
-# hist = model.fit(x_train, y_train, epochs=1000, batch_size=16, verbose=1, validation_split = 0.2,
-#                  callbacks=[es]
-#                  )
-# end = time.time()
+
+path1 = './_save/keras32/06_cancer/'
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5' # '1000-0.7777.hdf5'  #fit에서 반환되는 값을 빼오는 것이다. 
+filepath = "".join([path1, 'k30_', date, '_', filename])
+
+
+mcp = ModelCheckpoint(
+    monitor = 'val_loss',
+    mode = 'auto',
+    verbose = 1,
+    save_best_only=True,
+    filepath = filepath
+)
+
+hist = model.fit(x_train, y_train, epochs=1000, batch_size=16, verbose=1, validation_split = 0.2,
+                 callbacks=[es, mcp]
+                 )
+end = time.time()
 
 #4. 평가, 예측
-model = load_model('./_save/keras30_mcp/06_cancer/k30_0726_2044_0016-0.0292.hdf5')
 loss = model.evaluate(x_test, y_test)
 y_pred = model.predict(x_test)
 print("로스 : ", loss[0])
@@ -97,7 +121,7 @@ y_pred = np.round(y_pred)
 from sklearn.metrics import r2_score, accuracy_score
 accuracy_score = accuracy_score(y_test, y_pred)
 print("acc스코어 : ", accuracy_score)
-# print("걸린시간 : ", round(end - start, 2), "초" )
+print("걸린시간 : ", round(end - start, 2), "초" )
 
 
 
@@ -127,6 +151,10 @@ print("acc스코어 : ", accuracy_score)
 # 로스 :  0.010275790467858315
 # ACC :  0.988
 
-#load data
+# 세이브 점수
 # 로스 :  0.017171192914247513
 # ACC :  0.971
+
+# drop out
+# 로스 :  0.009849203750491142
+# ACC :  0.988

@@ -6,7 +6,7 @@
 import numpy as np
 import pandas as pd
 import time
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
@@ -49,54 +49,55 @@ print(y_test.shape)
 
 #2 모델구성
 
-model = Sequential()
-model.add(Dense(512, activation= 'relu', input_dim = 93))
-model.add(Dense(512, activation= 'relu'))
-model.add(Dense(512, activation= 'relu'))
-model.add(Dense(512, activation= 'relu'))
-model.add(Dense(512, activation= 'relu'))
-model.add(Dense(256, activation= 'relu'))
-model.add(Dense(256, activation= 'relu'))
-model.add(Dense(256, activation= 'relu'))
-model.add(Dense(256, activation= 'relu'))
-model.add(Dense(128, activation= 'relu'))
-model.add(Dense(128, activation= 'relu'))
-model.add(Dense(128, activation= 'relu'))
-model.add(Dense(128, activation= 'relu'))
-model.add(Dense(64, activation= 'relu'))
-model.add(Dense(64, activation= 'relu'))
-model.add(Dense(64, activation= 'relu'))
-model.add(Dense(64, activation= 'relu'))
-model.add(Dense(32, activation= 'relu'))
-model.add(Dense(32, activation= 'relu'))
-model.add(Dense(32, activation= 'relu'))
-model.add(Dense(32, activation= 'relu'))
-model.add(Dense(16, activation= 'relu'))
-model.add(Dense(16, activation= 'relu'))
-model.add(Dense(16, activation= 'relu'))
-model.add(Dense(9, activation= 'softmax'))
+# model = Sequential()
+# model.add(Dense(512, activation= 'relu', input_dim = 93))
+# model.add(Dense(512, activation= 'relu'))
+# model.add(Dense(512, activation= 'relu'))
+# model.add(Dense(512, activation= 'relu'))
+# model.add(Dense(512, activation= 'relu'))
+# model.add(Dense(256, activation= 'relu'))
+# model.add(Dense(256, activation= 'relu'))
+# model.add(Dense(256, activation= 'relu'))
+# model.add(Dense(256, activation= 'relu'))
+# model.add(Dense(128, activation= 'relu'))
+# model.add(Dense(128, activation= 'relu'))
+# model.add(Dense(128, activation= 'relu'))
+# model.add(Dense(128, activation= 'relu'))
+# model.add(Dense(64, activation= 'relu'))
+# model.add(Dense(64, activation= 'relu'))
+# model.add(Dense(64, activation= 'relu'))
+# model.add(Dense(64, activation= 'relu'))
+# model.add(Dense(32, activation= 'relu'))
+# model.add(Dense(32, activation= 'relu'))
+# model.add(Dense(32, activation= 'relu'))
+# model.add(Dense(32, activation= 'relu'))
+# model.add(Dense(16, activation= 'relu'))
+# model.add(Dense(16, activation= 'relu'))
+# model.add(Dense(16, activation= 'relu'))
+# model.add(Dense(9, activation= 'softmax'))
 
-#3 컴파일 훈련
-model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
+# #3 컴파일 훈련
+# model.compile(loss = 'categorical_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
 
-start_time = time.time()
+# start_time = time.time()
 
-es = EarlyStopping(
-    monitor='val_loss',
-    mode = 'min',
-    patience= 30,
-    restore_best_weights= True
-)
+# es = EarlyStopping(
+#     monitor='val_loss',
+#     mode = 'min',
+#     patience= 30,
+#     restore_best_weights= True
+# )
 
-model.fit(x_train, y_train, epochs = 1000, batch_size= 50, verbose = 1, validation_split=0.25, callbacks = [es])
+# model.fit(x_train, y_train, epochs = 1000, batch_size= 50, verbose = 1, validation_split=0.25, callbacks = [es])
 
-end_time = time.time()
+# end_time = time.time()
 
 #4 평가 예측
+model = load_model('_save/keras30_mcp/13_kaggle_otto/k30_0727_0011_0058-0.6904.hdf5')
 loss = model.evaluate(x_test, y_test)
 print('로스 값 :',loss[0])
 print('정확도 : ',round(loss[1],3))
-print('시간 : ', round(end_time - start_time, 2), '초')
+# print('시간 : ', round(end_time - start_time, 2), '초')
 y_pred = model.predict(x_test)
 y_submit = model.predict(test_csv)
 y_submit = np.round(y_submit)
@@ -120,3 +121,7 @@ sampleSubmission.to_csv(path + 'sampleSubmission_0724_1849.csv')
 # 정확도 :  0.763
 
 # StandardScaler
+
+# load data
+# 로스 값 : 0.7251054048538208
+# 정확도 :  0.758

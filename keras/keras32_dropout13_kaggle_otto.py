@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import time
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
@@ -51,29 +51,53 @@ print(y_test.shape)
 
 model = Sequential()
 model.add(Dense(512, activation= 'relu', input_dim = 93))
+model.add(Dropout(0.3))
 model.add(Dense(512, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(512, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(512, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(512, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(16, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(16, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(16, activation= 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(9, activation= 'softmax'))
 
 #3 컴파일 훈련
@@ -95,7 +119,7 @@ date = date.strftime("%m%d_%H%M") #시간을 문자열로 바꿔줌
 print(date) #0726_1654
 print(type(date))
 
-path1 = './_save/keras30_mcp/13_kaggle_otto/'
+path1 = './_save/keras32/13_kaggle_otto/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5' # '1000-0.7777.hdf5'  #fit에서 반환되는 값을 빼오는 것이다. 
 filepath = "".join([path1, 'k30_', date, '_', filename])
 
@@ -144,3 +168,7 @@ sampleSubmission.to_csv(path + 'sampleSubmission_0724_1849.csv')
 #세이브 값
 # 로스 값 : 0.7251054048538208
 # 정확도 :  0.758
+
+# drop out
+# 로스 값 : 1.293474555015564
+# 정확도 :  0.516

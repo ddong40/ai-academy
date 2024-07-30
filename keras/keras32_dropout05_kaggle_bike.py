@@ -2,8 +2,8 @@
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import time 
@@ -55,41 +55,67 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
-# #2 모델구성
-# model = Sequential()
-# model.add(Dense(256, activation= 'relu', input_dim = 8))
-# model.add(Dense(256, activation= 'relu'))
-# model.add(Dense(256, activation= 'relu'))
-# model.add(Dense(256, activation= 'relu'))
-# model.add(Dense(128, activation= 'relu'))
-# model.add(Dense(128, activation= 'relu'))
-# model.add(Dense(128, activation= 'relu'))
-# model.add(Dense(128, activation= 'relu'))
-# model.add(Dense(64, activation= 'relu'))
-# model.add(Dense(64, activation= 'relu'))
-# model.add(Dense(64, activation= 'relu'))
-# model.add(Dense(32, activation= 'relu'))
-# model.add(Dense(32, activation= 'relu'))
-# model.add(Dense(1, activation= 'linear'))
+#2 모델구성
+model = Sequential()
+model.add(Dense(256, activation= 'relu', input_dim = 8))
+model.add(Dropout(0.3))
+model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(256, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(128, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(64, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(32, activation= 'relu'))
+model.add(Dropout(0.3))
+model.add(Dense(32, activation= 'relu'))
+model.add(Dense(1, activation= 'linear'))
 
-# #3 컴파일 훈련
-# model.compile(loss = 'mse', optimizer='adam')
-# start = time.time()
+#3 컴파일 훈련
+model.compile(loss = 'mse', optimizer='adam')
+start = time.time()
 
-# from tensorflow.keras.callbacks import EarlyStopping
-# es = EarlyStopping(
-#     monitor='val_loss',
-#     mode = 'min',
-#     patience = 30,
-#     restore_best_weights = True 
-# )
+from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
+es = EarlyStopping(
+    monitor='val_loss',
+    mode = 'min',
+    patience = 30,
+    restore_best_weights = True 
+)
 
-# model.fit(x_train, y_train, epochs=500, batch_size=10, verbose=1, validation_split=0.25,
-#                  callbacks=[es])
-# end = time.time()
+import datetime
+date = datetime.datetime.now()
+date = date.strftime("%m%d_%H%M")
+path1 = './_save/keras32/05_kaggle_bike/'
+filename = '{epoch:04d}-{val_loss:4f}.hdf5'
+filepath = "".join([path1, 'k30_', date, '_', filename])
+
+mcp = ModelCheckpoint(
+    monitor = 'val_loss',
+    mode = 'auto',
+    verbose = 1,
+    save_best_only= True,
+    filepath = filepath    
+)
+
+model.fit(x_train, y_train, epochs=500, batch_size=10, verbose=1, validation_split=0.25,
+                 callbacks=[es, mcp])
+end = time.time()
 
 #4 평가 예측
-model = load_model('./_save/keras30_mcp/05_kaggle_bike/k30_0726_2040_0022-21872.089844.hdf5')
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
 y_submit = model.predict(test_csv)
@@ -145,6 +171,10 @@ print('r2 score :', r2)
 # 로스 :  21642.716796875
 # r2 score : 0.33027123377950784
 
-#load data
+# 세이브 점수
 # 로스 :  21703.53125
 # r2 score : 0.3283893159099268
+
+# drop out
+# 로스 :  22320.208984375
+# r2 score : 0.3093064548441353

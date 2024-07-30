@@ -2,7 +2,7 @@
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
@@ -44,52 +44,53 @@ test_csv = scaler.transform(test_csv)
 
 #2 모델구성
 
-model = Sequential()
-model.add(Dense(128, activation = 'relu', input_dim = 200))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(1, activation = 'sigmoid'))
+# model = Sequential()
+# model.add(Dense(128, activation = 'relu', input_dim = 200))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(1, activation = 'sigmoid'))
 
-# 3 컴파일 훈련
-model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics=['accuracy'])
+# # 3 컴파일 훈련
+# model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics=['accuracy'])
 
-start_time = time.time()
+# start_time = time.time()
 
-es = EarlyStopping(
-    monitor = 'val_loss',
-    mode = 'min',
-    patience = 30,
-    restore_best_weights=True
-)
+# es = EarlyStopping(
+#     monitor = 'val_loss',
+#     mode = 'min',
+#     patience = 30,
+#     restore_best_weights=True
+# )
 
-model.fit(x_train, y_train, epochs=1000, batch_size=10, verbose=1, validation_split=0.25, callbacks=[es])
+# model.fit(x_train, y_train, epochs=1000, batch_size=10, verbose=1, validation_split=0.25, callbacks=[es])
 
-end_time = time.time()
+# end_time = time.time()
 
 #4 평가 예측
+model = load_model('./_save/keras30_mcp/12_kaggle_santander_customer/k30_0726_2150_0045-0.2431.hdf5')
 loss = model.evaluate(x_test, y_test)
 print("로스 : ", loss[0])
 print("정확도 : ", round(loss[1], 3))
-print("시간", round(end_time - start_time, 2), '초')
+# print("시간", round(end_time - start_time, 2), '초')
 
 y_pred = model.predict(x_test)
-print(y_pred)
+# print(y_pred)
 
 y_submit = model.predict(test_csv)
 y_submit = np.round(y_submit)
@@ -113,3 +114,6 @@ sampleSubmission.to_csv(path+'samplesubmission_0724_1520.csv')
 # 로스 :  0.24586938321590424
 # 정확도 :  0.911
 
+# load data
+# 로스 :  0.24112220108509064
+# 정확도 :  0.911

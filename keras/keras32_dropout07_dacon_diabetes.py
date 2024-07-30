@@ -1,10 +1,10 @@
 import numpy as np
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 import sklearn as sk
 from sklearn.datasets import load_diabetes
 from sklearn.metrics import r2_score
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
 import time
 
 #1. 데이터
@@ -35,38 +35,66 @@ x_test = scaler.transform(x_test)
 # R2 0.62 이상 -0.1 (0.52)
 
 #2. 모델구성
-# model = Sequential()
-# model.add(Dense(128, input_dim=10))
-# model.add(Dense(128))
-# model.add(Dense(128))
-# model.add(Dense(64))
-# model.add(Dense(64))
-# model.add(Dense(64))
-# model.add(Dense(64))
-# model.add(Dense(32))
-# model.add(Dense(32))
-# model.add(Dense(32))
-# model.add(Dense(16))
-# model.add(Dense(16))
-# model.add(Dense(1))
+model = Sequential()
+model.add(Dense(128, input_dim=10))
+model.add(Dropout(0.3))
+model.add(Dense(128))
+model.add(Dropout(0.3))
+model.add(Dense(128))
+model.add(Dropout(0.3))
+model.add(Dense(64))
+model.add(Dropout(0.3))
+model.add(Dense(64))
+model.add(Dropout(0.3))
+model.add(Dense(64))
+model.add(Dropout(0.3))
+model.add(Dense(64))
+model.add(Dropout(0.3))
+model.add(Dense(32))
+model.add(Dropout(0.3))
+model.add(Dense(32))
+model.add(Dropout(0.3))
+model.add(Dense(32))
+model.add(Dropout(0.3))
+model.add(Dense(16))
+model.add(Dropout(0.3))
+model.add(Dense(16))
+model.add(Dropout(0.3))
+model.add(Dense(1))
 
-# #3. 컴파일, 훈련
-# model.compile(loss='mse', optimizer='adam')
-# start = time.time()
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam')
+start = time.time()
 
-# es = EarlyStopping(
-#     monitor='val_loss',
-#     mode = 'min',
-#     patience = 30,
-#     restore_best_weights=True
-# )
+es = EarlyStopping(
+    monitor='val_loss',
+    mode = 'min',
+    patience = 30,
+    restore_best_weights=True
+)
+import datetime
+date = datetime.datetime.now()
+date = date.strftime('%m%d_%H%M')
 
-# hist = model.fit(x_train, y_train, epochs=1000, batch_size=2, verbose=1, 
-#                  validation_split=0.25, callbacks=[es])
-# end = time.time()
+path1 = './_save/keras32/07_dacon_diabetes/'
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5' # '1000-0.7777.hdf5'  #fit에서 반환되는 값을 빼오는 것이다. 
+filepath = "".join([path1, 'k30_', date, '_', filename])
+
+mcp = ModelCheckpoint(
+    monitor = 'val_loss',
+    mode = 'auto',
+    verbose = 1,
+    save_best_only=True,
+    filepath = filepath
+)
+
+
+
+hist = model.fit(x_train, y_train, epochs=1000, batch_size=2, verbose=1, 
+                 validation_split=0.25, callbacks=[es, mcp])
+end = time.time()
 
 #4. 평가, 예측
-model = load_model('./_save/keras30_mcp/07_dacon_diabetes/k30_0726_2050_0018-2720.9097.hdf5')
 loss = model.evaluate(x_test, y_test)
 
 
@@ -117,6 +145,11 @@ print('r2 스코어 :',r2 )
 
 # RobustScaler
 
-# load data
+# 세이브 점수
 # 로스 :  3196.185791015625
 # r2 스코어 : 0.48436862012275794
+
+# drop out
+# 로스 :  3207.538330078125
+# r2 스코어 : 0.48253717220876147
+

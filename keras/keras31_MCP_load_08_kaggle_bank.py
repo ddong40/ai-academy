@@ -3,7 +3,7 @@
 # 문자를 수치화 해주기 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
@@ -56,36 +56,37 @@ test_csv = scaler.transform(test_csv)
 # print(test_csv)
 
 
-#2 모델구성
-model = Sequential()
-model.add(Dense(64,activation='relu', input_dim=10))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+# #2 모델구성
+# model = Sequential()
+# model.add(Dense(64,activation='relu', input_dim=10))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(64, activation='relu'))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dense(32, activation='relu'))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(16, activation='relu'))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(1, activation='sigmoid'))
 
-#3 컴파일 훈련
+# #3 컴파일 훈련
 from sklearn.metrics import accuracy_score
 
 
-model.compile(loss= 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
-start_time = time.time()
-es = EarlyStopping(
-    monitor= 'val_loss',
-    mode = 'min',
-    patience= 30,
-    restore_best_weights= True    
-)
+# model.compile(loss= 'binary_crossentropy', optimizer = 'adam', metrics = ['accuracy'])
+# start_time = time.time()
+# es = EarlyStopping(
+#     monitor= 'val_loss',
+#     mode = 'min',
+#     patience= 30,
+#     restore_best_weights= True    
+# )
 
-model.fit(x_train, y_train, epochs= 1000, batch_size=100, verbose=1, validation_split= 0.25, callbacks=[es])
-end_time = time.time()
+# model.fit(x_train, y_train, epochs= 1000, batch_size=100, verbose=1, validation_split= 0.25, callbacks=[es])
+# end_time = time.time()
 
 #4 평가 예측,
+model = load_model('./_save/keras30_mcp/08_kaggle_bank/k30_0727_0029_0006-0.3255.hdf5')
 loss = model.evaluate(x_test, y_test)
 
 y_pred = model.predict(x_test)
@@ -97,7 +98,7 @@ y_pred = np.round(y_pred)
 accuracy_score(y_test, y_pred)
 
 print("acc스코어 : ", accuracy_score)
-print("걸린시간 : ", round(end_time - start_time, 2), "초" )
+# print("걸린시간 : ", round(end_time - start_time, 2), "초" )
 
 y_submit = model.predict(test_csv)
 # y_submit = np.round(y_submit)
@@ -159,3 +160,9 @@ print(sampleSubmission['Exited'].value_counts())
 # RobustScaler
 # 로스 :  0.3252757489681244
 # acc :  0.865
+
+
+# load data
+# 로스 :  0.32415467500686646
+# acc :  0.864
+

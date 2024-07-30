@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -46,25 +46,33 @@ test_csv = scaler.transform(test_csv)
 
 model = Sequential()
 model.add(Dense(128, activation = 'relu', input_dim = 200))
+model.add(Dropout(0.2))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.2))
 model.add(Dense(1, activation = 'sigmoid'))
+
+
+
 
 # 3 컴파일 훈련
 model.compile(loss = 'binary_crossentropy', optimizer = 'adam', metrics=['accuracy'])
@@ -81,7 +89,7 @@ import datetime
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 
-path1 = './_save/keras30_mcp/12_kaggle_santander_customer/'
+path1 = './_save/keras32/12_kaggle_santander_customer/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 filepath = "".join([path1, 'k30_', date, '_', filename])
 
@@ -131,3 +139,7 @@ sampleSubmission.to_csv(path+'samplesubmission_0724_1520.csv')
 # 세이브 값
 # 로스 :  0.24112220108509064
 # 정확도 :  0.911
+
+# drop out
+# 로스 :  0.3261842727661133
+# 정확도 :  0.9

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
@@ -96,7 +96,8 @@ hist = model.fit(x_train, y_train, epochs=1000, batch_size=2, verbose=1,
 
 end = time.time()
 
-#4. 평가, 예측
+#4. 평가, 예측_save/keras30_mcp/04_dacon_ddarung/k30_0726_2035_0031-1881.2008.hdf5
+model = load_model('./_save/keras30_mcp/04_dacon_ddarung/k30_0726_2035_0031-1881.2008.hdf5')
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
@@ -154,3 +155,8 @@ print("r2 스코어 : ", r2)
 # RobustScaler
 # 로스 : 1984.86962890625
 # r2 스코어 :  0.7303610272161217
+
+# load data
+# 로스 : 1929.4364013671875
+# r2 스코어 :  0.7378915337148807
+

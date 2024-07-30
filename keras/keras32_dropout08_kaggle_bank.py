@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -59,14 +59,23 @@ test_csv = scaler.transform(test_csv)
 #2 모델구성
 model = Sequential()
 model.add(Dense(64,activation='relu', input_dim=10))
+model.add(Dense(0.3))
 model.add(Dense(64, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(64, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(64, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(32, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(32, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(16, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(16, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(8, activation='relu'))
+model.add(Dense(0.3))
 model.add(Dense(1, activation='sigmoid'))
 
 #3 컴파일 훈련
@@ -86,7 +95,7 @@ import datetime
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 
-path1 = './_save/keras30_mcp/08_kaggle_bank/'
+path1 = './_save/keras32/08_kaggle_bank/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
 filepath = ''.join([path1, 'k30_', date, '_', filename])
 
@@ -181,3 +190,7 @@ print(sampleSubmission['Exited'].value_counts())
 # 세이브 값
 # 로스 :  0.32415467500686646
 # acc :  0.864
+
+# drop out
+# 로스 :  0.6931590437889099
+# acc :  0.788

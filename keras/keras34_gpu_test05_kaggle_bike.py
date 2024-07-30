@@ -2,8 +2,8 @@
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import time 
@@ -55,41 +55,101 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
-# #2 모델구성
+#2 모델구성
 # model = Sequential()
 # model.add(Dense(256, activation= 'relu', input_dim = 8))
+# model.add(Dropout(0.3))
 # model.add(Dense(256, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(256, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(256, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(64, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(64, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(64, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(32, activation= 'relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(32, activation= 'relu'))
 # model.add(Dense(1, activation= 'linear'))
 
-# #3 컴파일 훈련
-# model.compile(loss = 'mse', optimizer='adam')
-# start = time.time()
+# model.summary()
 
-# from tensorflow.keras.callbacks import EarlyStopping
-# es = EarlyStopping(
-#     monitor='val_loss',
-#     mode = 'min',
-#     patience = 30,
-#     restore_best_weights = True 
-# )
+# input1 = Input(shape)
+input1 = Input(shape=(8))
+dense1 = Dense(256, name='ys1', activation = 'relu')(input1)
+drop1 = Dropout(0.3)(dense1)
+dense2 = Dense(256, name='ys2', activation = 'relu')(drop1)
+drop2 = Dropout(0.3)(dense2)
+dense3 = Dense(256, name='ys3', activation = 'relu')(drop2)
+drop3 = Dropout(0.3)(dense3)
+dense4 = Dense(256, name='ys4', activation = 'relu')(drop3)
+drop4 = Dropout(0.3)(dense4)
+dense5 = Dense(128, name='ys5', activation = 'relu')(drop4)
+drop5 = Dropout(0.3)(dense5)
+dense6 = Dense(128, name='ys6', activation = 'relu')(drop5)
+drop6 = Dropout(0.3)(dense6)
+dense7 = Dense(128, name='ys7', activation = 'relu')(drop6)
+drop7 = Dropout(0.3)(dense7)
+dense8 = Dense(128, name='ys8', activation = 'relu')(drop7)
+drop8 = Dropout(0.3)(dense8)
+dense9 = Dense(64, name='ys9', activation = 'relu')(drop8)
+drop9 = Dropout(0.3)(dense9)
+dense10 = Dense(64, name='ys10', activation = 'relu')(drop9)
+drop10 = Dropout(0.3)(dense10)
+dense11 = Dense(64, name='ys11', activation = 'relu')(drop10)
+drop11 = Dropout(0.3)(dense11)
+dense12 = Dense(32, name='ys12', activation = 'relu')(drop11)
+drop12 = Dropout(0.3)(dense12)
+dense12 = Dense(32, name='ys13', activation = 'relu')(drop12)
+output1 = Dense(1)(dense12)
+model = Model(inputs = input1, outputs = output1)
 
-# model.fit(x_train, y_train, epochs=500, batch_size=10, verbose=1, validation_split=0.25,
-#                  callbacks=[es])
-# end = time.time()
+model.summary()
+
+#3 컴파일 훈련
+model.compile(loss = 'mse', optimizer='adam')
+start = time.time()
+
+from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
+es = EarlyStopping(
+    monitor='val_loss',
+    mode = 'min',
+    patience = 30,
+    restore_best_weights = True 
+)
+
+import datetime
+date = datetime.datetime.now()
+date = date.strftime("%m%d_%H%M")
+path1 = './_save/keras32/05_kaggle_bike/'
+filename = '{epoch:04d}-{val_loss:4f}.hdf5'
+filepath = "".join([path1, 'k30_', date, '_', filename])
+
+mcp = ModelCheckpoint(
+    monitor = 'val_loss',
+    mode = 'auto',
+    verbose = 1,
+    save_best_only= True,
+    filepath = filepath    
+)
+
+model.fit(x_train, y_train, epochs=500, batch_size=10, verbose=1, validation_split=0.25,
+                 callbacks=[es, mcp])
+end = time.time()
 
 #4 평가 예측
-model = load_model('./_save/keras30_mcp/05_kaggle_bike/k30_0726_2040_0022-21872.089844.hdf5')
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
 y_submit = model.predict(test_csv)
@@ -100,8 +160,10 @@ sampleSubmission['count'] = y_submit
 print(sampleSubmission)
 
 sampleSubmission.to_csv(path+'samplesubmission_0725_1429.csv') #to_csv는 이 데이터를 ~파일을 만들어서 거기에 넣어줄거임
+
 print('로스 : ', loss)
 print('r2 score :', r2)
+print('시간 : ', round(end-start, 3), '초')
 
 # print(hist)
 # print('======================= hist.history==================')
@@ -145,6 +207,20 @@ print('r2 score :', r2)
 # 로스 :  21642.716796875
 # r2 score : 0.33027123377950784
 
-#load data
+# 세이브 점수
 # 로스 :  21703.53125
 # r2 score : 0.3283893159099268
+
+# drop out
+# 로스 :  22320.208984375
+# r2 score : 0.3093064548441353
+
+# cpu
+# 로스 :  22244.056640625
+# r2 score : 0.3116628252106921
+# 시간 :  41.058 초
+
+# gpu
+# 로스 :  22355.314453125
+# r2 score : 0.3082200008005934
+# 시간 :  246.864 초

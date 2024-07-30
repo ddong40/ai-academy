@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import time
@@ -57,24 +57,40 @@ x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
 
-2. 모델구성
+# 2. 모델구성
 model = Sequential()
 model.add(Dense(128, activation = 'relu', input_dim=9))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(128, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(64, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation = 'relu'))
+model.add(Dropout(0.3))
 model.add(Dense(32, activation = 'relu'))
 model.add(Dense(1))
 
@@ -100,7 +116,7 @@ print(type(date))
 
 
 
-path1 = './_save/keras30_mcp/04_dacon_ddarung/'
+path1 = './_save/keras32/04_dacon_ddarung/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5' # '1000-0.7777.hdf5'  #fit에서 반환되는 값을 빼오는 것이다. 
 filepath = "".join([path1, 'k30_', date, '_', filename])
 
@@ -118,7 +134,7 @@ hist = model.fit(x_train, y_train, epochs=1000, batch_size=2, verbose=1,
 
 end = time.time()
 
-4. 평가, 예측
+# 4. 평가, 예측
 
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
@@ -181,3 +197,7 @@ print("r2 스코어 : ", r2)
 # 세이브 점수
 # 로스 : 1929.4364013671875
 # r2 스코어 :  0.7378915337148807
+
+# drop out 
+# 로스 : 2389.078857421875
+# r2 스코어 :  0.6754503259354843

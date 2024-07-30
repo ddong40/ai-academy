@@ -1,9 +1,9 @@
 from sklearn.datasets import fetch_covtype
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
@@ -48,44 +48,98 @@ print(x_test.shape, y_test.shape)
 
 # print(pd.value_counts(y_train,))
 
-# #2. 모델 구성
+#2. 모델 구성
 
 # model = Sequential()
 # model.add(Dense(128, activation= 'relu', input_dim = 54))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(128, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(64, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(64, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(64, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(32, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(32, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(32, activation='relu'))
+# model.add(Dropout(0.3))
 # model.add(Dense(7, activation='softmax'))
 
-# #3 컴파일 훈련
-# model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+input1 = Input(shape=(54))
+dense1 = Dense(128, activation = 'relu')(input1)
+drop1 = Dropout(0.3)(dense1)
+dense2 = Dense(128, activation = 'relu')(drop1)
+drop2 = Dropout(0.3)(dense2)
+dense3 = Dense(128, activation = 'relu')(drop2)
+drop3 = Dropout(0.3)(dense3)
+dense4 = Dense(128, activation = 'relu')(drop3)
+drop4 = Dropout(0.3)(dense4)
+dense5 = Dense(64, activation = 'relu')(drop4)
+drop5 = Dropout(0.3)(dense5)
+dense6 = Dense(64, activation = 'relu')(drop5)
+drop6 = Dropout(0.3)(dense6)
+dense7 = Dense(64, activation = 'relu')(drop6)
+drop7 = Dropout(0.3)(dense7)
+dense8 = Dense(32, activation = 'relu')(drop7)
+drop8 = Dropout(0.3)(dense7)
+dense9 = Dense(32, activation = 'relu')(drop8)
+drop9 = Dropout(0.3)(dense9)
+dense10 = Dense(32, activation = 'relu')(drop9)
+drop10 = Dropout(0.3)(dense10)
+output1 = Dense(7, activation = 'softmax')(drop10)
+model = Model(inputs = input1, outputs = output1)
 
-# start_time = time.time()
 
-# es = EarlyStopping(
-#     monitor = 'val_loss',
-#     mode = 'min',
-#     patience = 70,
-#     restore_best_weights=True
-#     )
-# model.fit(x_train, y_train, epochs=1000, batch_size=300, verbose=1 , validation_split=0.25, callbacks=[es])
-# end_time = time.time()
+#3 컴파일 훈련
+model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
+start_time = time.time()
+
+import datetime
+date = datetime.datetime.now()
+date = date.strftime('%m%d_%H%M')
+
+es = EarlyStopping(
+    monitor = 'val_loss',
+    mode = 'min',
+    patience = 70,
+    restore_best_weights=True
+    )
+
+path1 = './_save/keras32/10_fetch_cotype/'
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
+filepath = "".join([path1, 'k30_', date])
+
+
+mcp = ModelCheckpoint(
+    monitor = 'val_loss',
+    mode = 'auto',
+    verbose = 1,
+    save_best_only=True,
+    filepath = filepath
+)
+
+
+model.fit(x_train, y_train, epochs=1000, batch_size=300, verbose=1 , validation_split=0.25, callbacks=[es, mcp])
+end_time = time.time()
 
 #평가 예측
-model = load_model('./_save/keras30_mcp/10_fetch_cotype/k30_0726_2142_0088-0.1812.hdf5')
 loss = model.evaluate(x_test, y_test)
+y_pred = model.predict(x_test)
 print("로스값 : ", loss[0])
 print("정확도 : ", round(loss[1], 3))
 
-y_pred = model.predict(x_test)
 
-print(y_pred)
+
+
 
 # 로스값 :  0.22436301410198212
 # 정확도 :  0.911
@@ -113,3 +167,11 @@ print(y_pred)
 # RobustScaler
 # 로스값 :  0.13968294858932495
 # 정확도 :  0.954
+
+# 세이브점수
+# 로스 :  1.2455443143844604
+# 정확도 :  0.961
+
+# dropout 
+# 로스값 :  0.5264937877655029
+# 정확도 :  0.777

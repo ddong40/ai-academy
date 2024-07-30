@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import time
@@ -57,28 +57,91 @@ x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
 
-2. 모델구성
-model = Sequential()
-model.add(Dense(128, activation = 'relu', input_dim=9))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(128, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(64, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(32, activation = 'relu'))
-model.add(Dense(1))
+# 2. 모델구성
+# model = Sequential()
+# model.add(Dense(128, activation = 'relu', input_dim=9))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(128, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(64, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dropout(0.3))
+# model.add(Dense(32, activation = 'relu'))
+# model.add(Dense(1))
 
-#3. 컴파일, 훈련
+# model.summary() Total params: 131,585
+# Trainable params: 131,585
+
+input1 = Input(shape=9)
+dense1 = Dense(128, name='ys1', activation='relu')(input1)
+drop1 = Dropout(0.3)(dense1)
+dense2 = Dense(128, name='ys2', activation='relu')(drop1)
+drop2 = Dropout(0.3)(dense2)
+dense3 = Dense(128, name ='ys3', activation = 'relu')(drop2)
+drop3 = Dropout(0.3)(dense3)
+dense4 = Dense(128, name ='ys4', activation = 'relu')(drop3)
+drop4 = Dropout(0.3)(dense4)
+dense5 = Dense(128, name ='ys5', activation = 'relu')(drop4)
+drop5 = Dropout(0.3)(dense5)
+dense6 = Dense(128, name ='ys6', activation = 'relu')(drop5)
+drop6 = Dropout(0.3)(dense6)
+dense7 = Dense(128, name ='ys7', activation = 'relu')(drop6)
+drop7 = Dropout(0.3)(dense7)
+dense8 = Dense(64, name ='ys8', activation = 'relu')(drop7)
+drop8 = Dropout(0.3)(dense8)
+dense9 = Dense(64, name ='ys9', activation = 'relu')(drop8)
+drop9 = Dropout(0.3)(dense9)
+dense10 = Dense(64, name ='ys10', activation = 'relu')(drop9)
+drop10 = Dropout(0.3)(dense10)
+dense11 = Dense(64, name ='ys11', activation = 'relu')(drop10)
+drop11 = Dropout(0.3)(dense11)
+dense12 = Dense(64, name ='ys12', activation = 'relu')(drop11)
+drop12 = Dropout(0.3)(dense12)
+dense13 = Dense(32, name ='ys13', activation = 'relu')(drop12)
+drop13 = Dropout(0.3)(dense13)
+dense14 = Dense(32, name ='ys14', activation = 'relu')(drop13)
+drop14 = Dropout(0.3)(dense14)
+dense15 = Dense(32, name ='ys15', activation = 'relu')(drop14)
+drop15 = Dropout(0.3)(dense15)
+dense16 = Dense(32, name ='ys16', activation = 'relu')(drop15)
+drop16 = Dropout(0.3)(dense16)
+dense17 = Dense(32, name ='ys17', activation = 'relu')(drop16)
+output1 = Dense(1)(dense17)
+model = Model(inputs=input1, outputs=output1)
+model.summary()
+
+# Total params: 131,585
+# Trainable params: 131,585
+# Non-trainable params: 0
+
+
+
+#3. 컴파일 훈련
 model.compile(loss='mse', optimizer='adam')
 start = time.time()
 
@@ -100,7 +163,7 @@ print(type(date))
 
 
 
-path1 = './_save/keras30_mcp/04_dacon_ddarung/'
+path1 = './_save/keras32/04_dacon_ddarung/'
 filename = '{epoch:04d}-{val_loss:.4f}.hdf5' # '1000-0.7777.hdf5'  #fit에서 반환되는 값을 빼오는 것이다. 
 filepath = "".join([path1, 'k30_', date, '_', filename])
 
@@ -118,7 +181,7 @@ hist = model.fit(x_train, y_train, epochs=1000, batch_size=2, verbose=1,
 
 end = time.time()
 
-4. 평가, 예측
+# 4. 평가, 예측
 
 loss = model.evaluate(x_test, y_test)
 y_predict = model.predict(x_test)
@@ -135,7 +198,8 @@ submission_csv['count'] = y_submit
 submission_csv.to_csv(path + "submission_0716_2045.csv")
 
 print('로스 :', loss)
-print("r2 스코어 : ", r2)
+print("r2 스코어일, 훈련 : ", r2)
+print("시간 : ", round(end-start, 3), '초')
 
 # print(hist)
 # print('=====================hist.history======================')
@@ -181,3 +245,19 @@ print("r2 스코어 : ", r2)
 # 세이브 점수
 # 로스 : 1929.4364013671875
 # r2 스코어 :  0.7378915337148807
+
+# drop out 
+# 로스 : 2389.078857421875
+# r2 스코어 :  0.6754503259354843
+
+#cpu
+# 로스 : 2514.935546875
+# r2 스코어일, 훈련 :  0.6583530766004382
+# 시간 :  28.55 초
+
+
+
+#gpu
+# 로스 : 2738.670654296875
+# r2 스코어일, 훈련 :  0.6279593157205337
+# 시간 :  247.246 초

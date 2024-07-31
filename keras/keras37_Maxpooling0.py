@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.datasets import mnist
 import pandas as pd
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 from sklearn.metrics import accuracy_score
 
 #1. 데이터
@@ -28,20 +28,18 @@ print(x_test.shape, y_test.shape) #(10000, 28, 28) (10000,)
 #2 모델구성
 
 model = Sequential()
-model.add(Conv2D(10, (2,2), input_shape=(28, 28, 1))) #데이터는 4차원, input_shape는 3차원 행을 빼주고
-                            # shape = (batch_size, rows, columns, channels)
-                            # shape = (batch_size, heights, widths, channels)
-#batch_size인 이유는? 데이터를 몇개씩 넣어서 훈련시키는 것이 모델의 구조를 바꾸진 않기 때문에 훈련시킬 양을 조절 
-
-model.add(Conv2D(filters=20, kernel_size=(3,3))) #공식적인 명칭 filter가 증폭시킬 량, kernel size가 이미지를 쪼갤 사이즈의 비율
-# 즉 28, 28, 1 의 이미지가 28, 28, 20의 필터가 된다. 
-model.add(Conv2D(15, (4,4)))
-model.add(Flatten()) #평탄화 했으니 
-
-model.add(Dense(units=8)) #dense는 결과가 2차원이지만 2차원 이상도 먹힘
-model.add(Dense(units=9, input_shape=(8,))) #4차원을 2차원으로 변환하는 작업이 필요하다. #순서와 값이 바뀌지 않는 한에서 reshape한다. 
- #shape = (batch_size, input_dim) 
-model.add(Dense(10, activation='softmax')) #y는 60000,10 으로 onehot encoding해야한다
+model.add(Conv2D(10, (3,3), input_shape=(28, 28, 1),
+                 strides=1,
+                #  padding='same'
+                 ))  #26, 26, 10
+model.add(MaxPooling2D()) #13, 13, 10
+model.add(Conv2D(filters=9, kernel_size=(3,3), 
+                 strides=1, padding='valid')) #11 , 11, 9
+model.add(Conv2D(8, (2,2)))#10, 10, 8
+# model.add(Flatten()) 
+# model.add(Dense(units=8)) 
+# model.add(Dense(units=9, input_shape=(8,))) 
+# model.add(Dense(10, activation='softmax')) 
 
 
 

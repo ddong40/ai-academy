@@ -28,11 +28,11 @@ print(x_test.shape, y_test.shape) #(10000, 28, 28) (10000,)
 #2 모델구성
 
 model = Sequential()
-model.add(Conv2D(10, (3,3), input_shape=(28, 28, 1),
+model.add(Conv2D(10, 3, input_shape=(28, 28, 1), #kernel size를 3만 써도 (3,3)의 커널사이즈 왜냐하면 정사각형 형태이기 때문에.
                  strides=1,
                 #  padding='same'
                  ))  #26, 26, 10
-model.add(MaxPooling2D()) #13, 13, 10
+model.add(MaxPooling2D(pool_size=3)) #13, 13, 10
 model.add(Conv2D(filters=9, kernel_size=(3,3), 
                  strides=1, padding='valid')) #11 , 11, 9
 model.add(Conv2D(8, (2,2)))#10, 10, 8

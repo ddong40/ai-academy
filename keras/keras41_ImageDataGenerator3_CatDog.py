@@ -15,14 +15,14 @@ import time
 
 train_datagen = ImageDataGenerator(
     rescale=1./255,
-    # horizontal_flip=True, # 수평 뒤집기
-    # vertical_flip=True, # 수직 뒤집기
-    # width_shift_range=0.1, # 평행이동 수평 이미지 전체를 10프로만큼 이동시켜준다.
+    horizontal_flip=True, # 수평 뒤집기
+    vertical_flip=True, # 수직 뒤집기
+    width_shift_range=0.1, # 평행이동 수평 이미지 전체를 10프로만큼 이동시켜준다.
     # height_shift_range=0.1, # 평행이동 수직
-    # rotation_range=5, #각도 만큼 이미지 회전
+    rotation_range=0.1, #각도 만큼 이미지 회전
     # zoom_range=1.2, #축소 또는 확대
     # shear_range=0.7, # 좌표 하나를 고정시키고 다른 몇 개의 좌표를 이동시키는 변환
-    # fill_mode='nearest', #이동했을 때 비는 공간을 가장 가까운 곳의 데이터로 채운다. 예를 들어 주변에 배경이 있다면 그 배경에 가까운 색으로 채워짐
+    fill_mode='nearest', #이동했을 때 비는 공간을 가장 가까운 곳의 데이터로 채운다. 예를 들어 주변에 배경이 있다면 그 배경에 가까운 색으로 채워짐
     )  
 start_time1 = time.time()
 test_datagen = ImageDataGenerator(
@@ -33,8 +33,8 @@ path_test = './_data/image/cat_and_dog/Test/'
 
 xy_train = train_datagen.flow_from_directory(
     path_train,
-    target_size=(100,100),
-    batch_size=19997,
+    target_size=(80,80),
+    batch_size=20000,
     class_mode='binary',
     color_mode='rgb',
     shuffle=True) #imagedatagenertor방식으로 디렉토리부터 흘러와서 이미지를 수치화하여 xy_train에 담아라
@@ -43,12 +43,19 @@ xy_train = train_datagen.flow_from_directory(
 
 xy_test = test_datagen.flow_from_directory(
     path_train,
-    target_size=(100,100),
-    batch_size=19997,
+    target_size=(80,80),
+    batch_size=20000,
     class_mode='binary',
     color_mode='rgb',
     shuffle=False) #test
 
+np_path = 'C:/Users/ddong40/ai_2/_data/_save_npy/cat_dog/'
+np.save(np_path + 'keras43_01_x_train.npy', arr=xy_train[0][0]) # 이 경로에 x_train 데이터를 저장
+np.save(np_path + 'keras43_01_y_train.npy', arr=xy_train[0][1]) # 이 경로에 y_train 데이터 저장
+np.save(np_path + 'keras43_01_x_test.npy', arr=xy_test[0][0]) # 이 경로에 x_test 데이터를 저장
+np.save(np_path + 'keras43_01_y_test.npy', arr=xy_test[0][1]) # 이 경로에 y_test 데이터를 저장
+# train test split 이전에 저장해줄 것 
+'''
 x_train = xy_train[0][0] 
 y_train = xy_train[0][1] 
 x_test1 = xy_test[0][0]
@@ -139,3 +146,4 @@ print('시간 :', round(end_time - start_time, 3), '초')
 # 로스 :  0.5298580527305603
 # 정확도 :  0.734000027179718
 # 시간 : 117.387 초
+'''

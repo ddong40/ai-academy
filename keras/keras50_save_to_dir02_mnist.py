@@ -66,9 +66,10 @@ print(y_augmented.shape)
 x_augmented = train_datagen.flow(
     x_augmented, y_augmented, 
     batch_size = augment_size,
-    shuffle=False
+    shuffle=False,
+    save_to_dir='C:/Users/ddong40/ai_2/_data/_save_img/02_mnist/'
 ).next()[0]
-
+'''
 x_train = x_train.reshape(-1, 28, 28, 1)
 x_test = x_test.reshape(-1, 28, 28, 1)
 
@@ -246,7 +247,4 @@ print(y_predict[0])
 # 데이터 증폭
 # 로스 :  [0.082846499979496, 0.974399983882904]
 # acc_score : 0.9744
-
-# 이미지 반전 false
-# 로스 :  [0.07905659824609756, 0.9765999913215637]
-# acc_score : 0.9766
+'''

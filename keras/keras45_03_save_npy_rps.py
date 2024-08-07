@@ -18,10 +18,14 @@ xy_train = train_datagen.flow_from_directory(
     path_train,
     target_size=(100,100),
     batch_size=2520,
-    class_mode='categorical',
+    class_mode='sparse',
     color_mode = 'rgb',
     shuffle = True    
 )
+
+print(xy_train[0][0].shape)
+print(np.unique(xy_train[0][0]))
+
 
 np_path = 'C:/Users/ddong40/ai_2/_data/_save_npy/rps/'
 np.save(np_path + 'keras43_01_x_train.npy', arr=xy_train[0][0]) # 이 경로에 x_train 데이터를 저장

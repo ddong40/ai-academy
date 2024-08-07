@@ -9,7 +9,7 @@ dataset = load_boston()
 print(dataset)
 print(dataset.DESCR)
 print(dataset.feature_names)
-'''
+
 x = dataset.data
 y = dataset.target
 
@@ -36,26 +36,26 @@ model.add(Dense(10))
 model.add(Dense(10))
 model.add(Dense(1))
 
-#3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=380, batch_size=5)
+model.summary()
+# #3. 컴파일, 훈련
+# model.compile(loss='mse', optimizer='adam')
+# model.fit(x_train, y_train, epochs=380, batch_size=5)
 
-#4. 평가, 예측
-loss = model.evaluate(x_test, y_test)
-print('로스 : ', loss)
+# #4. 평가, 예측
+# loss = model.evaluate(x_test, y_test)
+# print('로스 : ', loss)
 
-y_predict = model.predict(x_test)
-from sklearn.metrics import r2_score
-r2 = r2_score(y_test, y_predict)
-print("r2스코어 : ", r2)
+# y_predict = model.predict(x_test)
+# from sklearn.metrics import r2_score
+# r2 = r2_score(y_test, y_predict)
+# print("r2스코어 : ", r2)
 
-# (x, y, train_size=0.8, random_state=3333)  epochs=400, batch_size=5
-# 로스 :  19.67884063720703
-# r2스코어 :  0.7459871274196113
-# (x, y, train_size=0.8, random_state=6666)  epochs=400, batch_size=5
-# 로스 :  20.507410049438477
-# r2스코어 :  0.7809722401357289
-# (x, y, train_size=0.8, random_state=6666)  epochs=500, batch_size=5
-# 로스 :  20.05512809753418
-# r2스코어 :  0.7858027954982522
-'''
+# # (x, y, train_size=0.8, random_state=3333)  epochs=400, batch_size=5
+# # 로스 :  19.67884063720703
+# # r2스코어 :  0.7459871274196113
+# # (x, y, train_size=0.8, random_state=6666)  epochs=400, batch_size=5
+# # 로스 :  20.507410049438477
+# # r2스코어 :  0.7809722401357289
+# # (x, y, train_size=0.8, random_state=6666)  epochs=500, batch_size=5
+# # 로스 :  20.05512809753418
+# # r2스코어 :  0.7858027954982522

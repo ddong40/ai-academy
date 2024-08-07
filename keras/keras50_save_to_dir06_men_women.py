@@ -57,7 +57,8 @@ print(y_augmented.shape)
 x_augmented = datagen.flow(
     x_augmented, y_augmented,
     batch_size= augment_size,
-    shuffle = False
+    shuffle = False,
+    save_to_dir='C:/Users/ddong40/ai_2/_data/_save_img/06_men_women/'
 ).next()[0]
 
 # x_train = x_train.reshape(50000, 32,32,3)
@@ -65,7 +66,7 @@ x_augmented = datagen.flow(
 
 print(x_augmented.shape)
 print(y_augmented.shape)
-
+'''
 x_train2 = np.concatenate((x_train2, x_augmented), axis=0)
 y_train2 = np.concatenate((y_train2, y_augmented), axis=0)
 
@@ -165,3 +166,4 @@ print('시간 : ', round(end_time - start_time, 2), '초')
 # 로스 :  0.21354340016841888
 # acc :  0.9244909286499023
 # 시간 :  1056.64 초
+'''

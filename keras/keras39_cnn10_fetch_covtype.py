@@ -115,6 +115,8 @@ model.add(Dropout(0.2))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(7, activation = 'softmax'))
 
+model.summary()
+
 
 #3 컴파일 훈련
 model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['accuracy'])

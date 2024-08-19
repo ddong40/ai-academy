@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 from tensorflow.keras.layers import Dense, LSTM, Conv1D, Input, Concatenate, Bidirectional
-from tensorflow.keras.models import Sequential, Model, load_model
+from tensorflow.keras.models import Sequential, Model
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -27,7 +27,7 @@ y = pd.read_csv(path + '성우하이텍 240816.csv', index_col=0, thousands=",")
 # print(x_hive.isnull().sum())
 # print(y.isnull().sum())
 
-
+print(x_hive)
 
 
 x_naver = x_naver[:948]
@@ -59,15 +59,18 @@ print(x_naver.shape) #(948, 14)
 print(x_hive.shape) #(948, 14)
 print(y.shape) #(948,)
 
-x_naver_test = x_naver[-5:]
-x_hive_test = x_hive[-5:]
-y_test1 = y[5:]
-x_naver = x_naver[:-5]
-x_hive = x_hive[:-5]
-print(x_naver_test)
+x_naver_test = x_naver[-10:]
+x_hive_test = x_hive[-10:]
+y_test1 = y[10:]
+x_naver = x_naver[:-10]
+x_hive = x_hive[:-10]
+print(x_naver_test.shape)
+print(x_hive_test.shape)
 print(y_test1)
 
-size = 5
+
+
+size = 10
 
 def split_x(dataset, size):
     aaa= []
@@ -83,9 +86,9 @@ xxx_hive = split_x(x_hive, size)
 xxx_naver_test = split_x(x_naver_test, size)
 xxx_hive_test = split_x(x_hive_test, size)
 
-print(xxx_naver) #(939, 5, 14)
 print(xxx_naver.shape) #(939, 5, 14)
-print(xxx_hive.shape) #(939, 5)
+print(xxx_naver_test) #(939, 5, 14)
+print(xxx_hive_test.shape) #(939, 5)
 
 yyy =split_x(y_test1, size)
 
@@ -99,15 +102,83 @@ print(yyy.shape) #(939,)
 
 x1_train, x1_test, x2_train, x2_test, y_train, y_test = train_test_split(xxx_naver, xxx_hive, yyy, test_size=0.2, random_state=1024, shuffle=True)
 
+print(x1_train.shape)
+print(x2_train.shape)
+print(y_train.shape)
 
-model = load_model('./_save/중간고사가중치/keras63_99_성우하이텍_전사영.hdf5')
+# x_naver_test = np.reshape(x_naver_test, (10, 14))
+# x_hive_test = np.reshape(x_hive_test, (10, 14))
+
+#2-1 모델구성
+input1 = Input(shape=(10, 14))
+dense1 = Bidirectional(LSTM(10, activation='relu', name='bit1'))(input1)
+dense2 = Dense(32, activation='relu', name='bit2')(dense1)
+dense3 = Dense(128, activation='relu', name='bit3')(dense2)
+dense4 = Dense(64, activation='relu', name='bit4')(dense3)
+output1 = Dense(32, activation='relu', name='bit5')(dense4)
+# model1 = Model(inputs=input1, outputs=output1)
+
+# model1.summary()
+
+#2-2 모델구성
+input11 = Input(shape=(10, 14))
+dense11 = Bidirectional(LSTM(10, activation='relu', name='bit11'))(input11)
+dense21 = Dense(128, activation='relu', name='bit21')(dense11)
+output11 = Dense(64, activation='relu', name='bit31')(dense21)
+# model2 = Model(inputs=input11, outputs=output11)
+
+
+merge1 = Concatenate(name='mg1')([output1, output11])
+merge2 = Dense(64, name='mg2')(merge1)
+merge3 = Dense(32, name='mg3')(merge2)
+output = Dense(10, name='last')(merge3)
+
+model = Model(inputs=[input1, input11], outputs=output)
+
+model.summary()
+
+
+###########컴파일 훈련#########
+
+
+model.compile(loss='mse', optimizer='adam')
+
+start_time = time.time()
+
+es = EarlyStopping(
+    monitor='val_loss',
+    mode = 'min',
+    verbose=1,
+    patience=30,
+    restore_best_weights=True
+)
+
+import datetime
+date = datetime.datetime.now()
+date = date.strftime('%m%d_%H%M')
+
+path1 = './_save/중간고사가중치/'
+filename = '{epoch:04d}-{val_loss:.4f}.hdf5'
+filepath = "".join([path1, 'k30_', date, '_', filename])
+
+mcp = ModelCheckpoint(
+    monitor = 'val_loss',
+    mode = 'auto',
+    verboss =1,
+    save_best_only=True,
+    filepath=filepath
+)
+
+model.fit([x1_train, x2_train], y_train, epochs=1000, batch_size=16, verbose=1, validation_split=0.1, callbacks=[es, mcp])
+
+end_time = time.time()
+
+# model.save("./_save/_data/중간고사데이터/_전사영.h5")
 
 loss = model.evaluate([x1_test, x2_test], y_test)
 y_predict = model.predict([xxx_naver_test, xxx_hive_test])
 
 print('로스 : ', loss)
-# print('시간 : ', round(end_time - start_time, 3), '초')
-print('성우하이텍 8월 19일 종가 : ', y_predict[0][1], '원')
+print('시간 : ', round(end_time - start_time, 3), '초')
+print('종가가격 : ', y_predict[0][0], '원')
 
-# 로스 :  3194060.0
-# 성우하이텍 8월 19일 종가 :  7482.5493 원

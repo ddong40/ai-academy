@@ -113,7 +113,7 @@ model.compile(loss = 'binary_crossentropy', optimizer= 'adam', metrics=['accurac
 
 # metrics=['accuracy']
 
-model.fit(x, labels, epochs=1000, batch_size=16)
+model.fit(x, labels, epochs=500, batch_size=16)
 
 loss = model.evaluate(x, labels)
 y_predict = model.predict(x_test)

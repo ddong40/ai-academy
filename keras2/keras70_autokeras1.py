@@ -5,6 +5,9 @@ print(ak.__version__)   # 1.0.20
 print(tf.__version__)   # 2.15.1
 
 import time
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 #1. 데이터
 
@@ -40,3 +43,8 @@ y_pre2 = best_model.predict(x_test)
 # print('best_model 결과 :', result2)
 
 print('걸린 시간 :', round(end_time - start_time, 2), '초')
+
+# model 결과 : [0.038437675684690475, 0.9890000224113464]
+# 313/313 [==============================] - 0s 865us/step
+# 걸린 시간 : 42474.3 초
+
